@@ -1,4 +1,12 @@
 ﻿<template>
+  <div class="titlebar" data-tauri-drag-region>
+    <span class="titlebar-title">Color Ticket Simulator</span>
+    <div class="titlebar-controls">
+      <button @click="minimizeWindow" class="tb-btn">─</button>
+      <button @click="toggleMaximize" class="tb-btn">□</button>
+      <button @click="closeWindow" class="tb-btn tb-close">✕</button>
+    </div>
+  </div>
   <main class="app-shell">
     <section class="left-rail">
       <header class="brand-row">
@@ -272,8 +280,16 @@
 
 <script setup lang="ts">
 import { invoke } from '@tauri-apps/api/core';
+import { getCurrentWindow } from '@tauri-apps/api/window';
 import * as THREE from 'three';
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+
+let appWindow: any;
+try {
+  appWindow = getCurrentWindow();
+} catch {
+  appWindow = { minimize: () => {}, toggleMaximize: () => {}, close: () => {} };
+}
 
 type LotteryKind = 'ssq' | 'dlt';
 
@@ -418,6 +434,10 @@ const trendLanes = computed(() => {
 function pad(n: number) {
   return String(n).padStart(2, '0');
 }
+
+const minimizeWindow = () => { try { appWindow.minimize(); } catch {} };
+const toggleMaximize = () => { try { appWindow.toggleMaximize(); } catch {} };
+const closeWindow = () => { try { appWindow.close(); } catch {} };
 
 async function safeInvoke<T>(command: string, args?: Record<string, unknown>): Promise<T> {
   const inTauri = typeof window !== 'undefined' && !!(window as any).__TAURI_INTERNALS__;
