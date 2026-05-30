@@ -191,6 +191,40 @@
       </div>
 
       <section class="lower-grid">
+        <article class="panel predict-panel" v-if="predictResult">
+          <div class="section-title">
+            <h2>智能预测</h2>
+            <span>置信度 {{ (predictResult.confidence * 100).toFixed(1) }}%</span>
+          </div>
+          <div class="predict-strip">
+            <div class="predict-numbers">
+              <span v-for="(n,i) in predictResult.front" :key="'pf-'+i" class="mini-ball red">{{ pad(n) }}</span>
+              <span v-for="(n,i) in predictResult.back" :key="'pb-'+i" class="mini-ball blue">{{ pad(n) }}</span>
+            </div>
+            <div class="predict-scores">
+              <div class="score-item">
+                <span>走势吻合</span>
+                <strong>{{ (predictResult.trendScore * 100).toFixed(0) }}%</strong>
+              </div>
+              <div class="score-item">
+                <span>规律匹配</span>
+                <strong>{{ (predictResult.patternScore * 100).toFixed(0) }}%</strong>
+              </div>
+              <div class="score-item">
+                <span>物理一致性</span>
+                <strong>{{ (predictResult.physicsScore * 100).toFixed(0) }}%</strong>
+              </div>
+              <div class="score-item">
+                <span>蒙特卡洛</span>
+                <strong>{{ predictResult.monteCarloRounds }}轮</strong>
+              </div>
+            </div>
+            <div class="predict-confidences">
+              <span v-for="(c,i) in predictResult.frontConfidence" :key="'pfc-'+i" class="conf-tag red">红{{ pad(predictResult.front[i]) }} {{ (c*100).toFixed(0) }}%</span>
+              <span v-for="(c,i) in predictResult.backConfidence" :key="'pbc-'+i" class="conf-tag blue">蓝{{ pad(predictResult.back[i]) }} {{ (c*100).toFixed(0) }}%</span>
+            </div>
+          </div>
+        </article>
         <article class="panel physics-panel">
           <div class="section-title">
             <h2>物理参数</h2>
@@ -219,24 +253,6 @@
           </p>
         </article>
 
-        <article class="panel" v-if="predictResult">
-          <div class="section-title">
-            <h2>智能预测</h2>
-            <span>置信度 {{ (predictResult.confidence * 100).toFixed(1) }}%</span>
-          </div>
-          <div class="backtest">
-            <strong>走势吻合 {{ (predictResult.trendScore * 100).toFixed(1) }}% · 规律匹配 {{ (predictResult.patternScore * 100).toFixed(1) }}% · 物理一致性 {{ (predictResult.physicsScore * 100).toFixed(1) }}%</strong>
-            <p>蒙特卡洛 {{ predictResult.monteCarloRounds }} 轮模拟</p>
-            <div style="margin-top:8px;">
-              <span v-for="(n,i) in predictResult.front" :key="'pf-'+i" class="mini-ball red">{{ pad(n) }}</span>
-              <span v-for="(n,i) in predictResult.back" :key="'pb-'+i" class="mini-ball blue">{{ pad(n) }}</span>
-            </div>
-            <div style="margin-top:8px;font-size:11px;color:var(--text-soft);">
-              <span v-for="(c,i) in predictResult.frontConfidence" :key="'pfc-'+i">红{{ pad(predictResult.front[i]) }}:{{ (c*100).toFixed(0) }}% </span>
-              <span v-for="(c,i) in predictResult.backConfidence" :key="'pbc-'+i">蓝{{ pad(predictResult.back[i]) }}:{{ (c*100).toFixed(0) }}%</span>
-            </div>
-          </div>
-        </article>
         <article class="panel">
           <div class="section-title">
             <h2>回测结果</h2>
@@ -404,8 +420,15 @@ function pad(n: number) {
 }
 
 async function safeInvoke<T>(command: string, args?: Record<string, unknown>): Promise<T> {
+  const inTauri = typeof window !== 'undefined' && !!(window as any).__TAURI_INTERNALS__;
+  if (!inTauri) {
+    return mockInvoke<T>(command, args);
+  }
   try {
-    return await invoke<T>(command, args);
+    return await Promise.race([
+      invoke<T>(command, args),
+      new Promise<never>((_, reject) => setTimeout(() => reject(new Error('timeout')), 2000)),
+    ]);
   } catch {
     return mockInvoke<T>(command, args);
   }
