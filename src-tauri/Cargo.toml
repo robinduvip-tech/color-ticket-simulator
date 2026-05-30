@@ -1,0 +1,22 @@
+[package]
+name = "color-ticket-simulator"
+version = "0.1.0"
+description = "双色球与大乐透开奖物理模拟器"
+authors = ["Codex"]
+edition = "2021"
+
+[lib]
+name = "color_ticket_simulator_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+chrono = { version = "0.4", features = ["serde"] }
+rand = "0.9"
+rand_chacha = "0.9"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tauri = { version = "2", features = [] }
+
