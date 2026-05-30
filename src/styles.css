@@ -721,75 +721,105 @@ h2 {
 /* Small desktop / narrow window */
 @media (max-width: 1280px) {
   .app-shell {
-    grid-template-columns: 320px minmax(0, 1fr);
+    grid-template-columns: 340px minmax(0, 1fr);
+  }
+  .left-rail {
+    padding: 18px;
   }
   .stage {
     padding: 18px;
+    grid-template-rows: auto minmax(360px, 1fr) auto auto;
   }
   .stage-topbar h2 {
-    font-size: 30px;
+    font-size: 28px;
   }
   .machine-layout {
     grid-template-columns: 1fr;
   }
   .machine-card {
-    min-height: 380px;
+    min-height: 360px;
   }
   .bank-grid {
-    grid-template-columns: repeat(12, 28px);
+    grid-template-columns: repeat(11, 28px);
     gap: 6px;
   }
   .physics-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  .result-strip {
-    grid-template-columns: 1fr 0.6fr;
-  }
 }
 
 /* Tablet */
 @media (max-width: 980px) {
+  body {
+    overflow: auto;
+  }
   .app-shell {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
+    height: auto;
+    min-height: calc(100vh - 38px);
   }
   .left-rail {
     height: auto;
-    max-height: 50vh;
-    overflow: auto;
+    max-height: none;
+    overflow: visible;
     border-right: none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-    padding: 16px;
+    padding: 14px 16px;
   }
-  .left-rail .panel.trend-panel {
+  .left-rail .panel.trend-panel,
+  .left-rail .panel:first-of-type {
     display: none;
+  }
+  .switch-row {
+    margin: 0;
+  }
+  .switch-row button {
+    min-height: 48px;
+    border-radius: 14px;
+    font-size: 13px;
+  }
+  .metrics-panel {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    padding: 10px 12px;
+    margin-bottom: 0;
+  }
+  .metrics-panel strong {
+    font-size: 22px;
   }
   .stage {
     height: auto;
-    min-height: 0;
-    padding: 16px;
+    min-height: auto;
+    overflow: visible;
+    padding: 14px 16px;
     gap: 12px;
-  }
-  h1 {
-    font-size: 24px;
+    grid-template-rows: auto auto auto auto;
   }
   .stage-topbar {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
     gap: 10px;
   }
   .stage-topbar h2 {
-    font-size: 26px;
+    font-size: 24px;
+  }
+  .stage-copy {
+    font-size: 11px;
   }
   .actions {
-    width: 100%;
     flex-wrap: wrap;
+    gap: 6px;
+  }
+  .actions button {
+    padding: 7px 13px;
+    font-size: 12px;
   }
   .machine-layout {
     grid-template-columns: 1fr;
   }
   .machine-card {
-    min-height: 320px;
+    min-height: 300px;
   }
   .ball-bank {
     overflow: visible;
@@ -806,15 +836,24 @@ h2 {
     height: 28px;
     font-size: 10px;
   }
+  .result-ball {
+    width: 42px;
+    height: 42px;
+    font-size: 17px;
+  }
+  .ghost-ball {
+    width: 42px;
+    height: 42px;
+  }
   .result-strip,
   .lower-grid {
     grid-template-columns: 1fr;
   }
-  .metrics-panel {
-    grid-template-columns: 1fr 1fr;
-  }
   .physics-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  h1 {
+    font-size: 22px;
   }
   .titlebar-title {
     font-size: 11px;
@@ -823,124 +862,243 @@ h2 {
 
 /* Mobile */
 @media (max-width: 640px) {
+  body {
+    overflow: auto;
+  }
   .titlebar {
-    height: 34px;
-    padding: 0 10px;
+    height: 32px;
+    padding: 0 8px;
   }
   .titlebar-title {
     font-size: 10px;
   }
   .tb-btn {
-    width: 38px;
-    height: 34px;
-    font-size: 11px;
+    width: 34px;
+    height: 32px;
+    font-size: 10px;
   }
   .app-shell {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
-    height: calc(100vh - 34px);
-    margin-top: 34px;
+    height: auto;
+    min-height: calc(100vh - 32px);
+    margin-top: 32px;
   }
   .left-rail {
-    max-height: 40vh;
-    padding: 12px;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+  .left-rail .panel.trend-panel,
+  .left-rail .panel:first-of-type {
+    display: none;
+  }
+  h1 {
+    font-size: 18px;
+    max-width: 100%;
+  }
+  .brand-row {
+    flex-wrap: wrap;
+    gap: 8px;
   }
   .switch-row {
     grid-template-columns: 1fr;
-    gap: 8px;
-    margin: 14px 0 10px;
+    gap: 6px;
+    margin: 8px 0;
   }
   .switch-row button {
-    min-height: 52px;
-    border-radius: 14px;
+    min-height: 42px;
+    border-radius: 12px;
+    font-size: 12px;
   }
-  h1 {
-    font-size: 20px;
-    max-width: 100%;
+  .switch-row button span {
+    font-size: 10px;
   }
   .metrics-panel {
     grid-template-columns: 1fr;
-    gap: 8px;
-    padding: 12px;
+    gap: 6px;
+    padding: 8px 10px;
+    margin-bottom: 0;
   }
   .metrics-panel strong {
-    font-size: 24px;
+    font-size: 18px;
+    margin-top: 2px;
+  }
+  .metrics-panel p {
+    font-size: 11px;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .stage {
-    padding: 12px;
-    gap: 10px;
+    padding: 10px 12px;
+    gap: 8px;
+    grid-template-rows: auto auto auto auto;
+    height: auto;
+    min-height: auto;
+    overflow: visible;
   }
-  .stage-topbar h2 {
-    font-size: 22px;
-  }
-  .actions {
+  .stage-topbar {
+    flex-direction: column;
     gap: 6px;
   }
+  .stage-topbar h2 {
+    font-size: 20px;
+  }
+  .stage-copy {
+    font-size: 10px;
+    margin-top: 4px;
+  }
+  .actions {
+    gap: 5px;
+  }
   .actions button {
-    padding: 8px 12px;
-    font-size: 12px;
+    padding: 6px 10px;
+    font-size: 11px;
+    border-radius: 999px;
+  }
+  .machine-layout {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
   .machine-card {
-    min-height: 260px;
-    border-radius: 24px;
+    min-height: 240px;
+    border-radius: 22px;
   }
   .phase-card {
-    top: 10px;
-    left: 10px;
-    min-width: 110px;
-    padding: 8px 10px;
-    border-radius: 14px;
+    top: 8px;
+    left: 8px;
+    min-width: 100px;
+    padding: 6px 8px;
+    border-radius: 12px;
+  }
+  .phase-card span {
+    font-size: 10px;
   }
   .phase-card strong {
-    font-size: 14px;
+    font-size: 13px;
   }
   .bank-grid {
-    grid-template-columns: repeat(8, 26px);
+    grid-template-columns: repeat(7, 24px);
     gap: 4px;
   }
   .bank-grid.compact {
-    grid-template-columns: repeat(5, 26px);
+    grid-template-columns: repeat(4, 24px);
   }
   .bank-ball {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
     font-size: 9px;
   }
   .result-ball {
-    width: 40px;
-    height: 40px;
-    font-size: 16px;
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
   }
   .ghost-ball {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
+  }
+  .result-strip {
+    padding: 10px;
+    gap: 10px;
+  }
+  .mini-ball {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
   }
   .history-list {
-    max-height: 200px;
+    max-height: 160px;
+    gap: 6px;
   }
   .history-card {
-    padding: 10px;
+    padding: 8px;
+    border-radius: 12px;
   }
-  .trend-summary {
-    grid-template-columns: 1fr;
+  .history-card footer {
+    font-size: 10px;
+    margin-top: 6px;
   }
-  .heat-lanes {
-    gap: 8px;
-    padding: 8px 12px 12px;
+  .history-meta {
+    margin-bottom: 6px;
+  }
+  .history-meta strong {
+    font-size: 13px;
+  }
+  .history-meta span {
+    font-size: 10px;
+  }
+  .section-title {
+    padding: 10px 12px 8px;
+  }
+  .section-title h2 {
+    font-size: 14px;
+  }
+  .section-title span {
+    font-size: 10px;
+  }
+  .bank-section {
+    padding: 10px 12px 4px;
+  }
+  .bank-heading {
+    margin-bottom: 6px;
+  }
+  .bank-heading span {
+    font-size: 10px;
+  }
+  .bank-heading strong {
+    font-size: 12px;
   }
   .lower-grid {
     grid-template-columns: 1fr;
+    gap: 8px;
   }
   .physics-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: 6px;
     padding: 10px;
   }
   .physics-grid div {
-    min-height: 60px;
-    padding: 10px;
+    min-height: 52px;
+    padding: 8px;
+    border-radius: 14px;
+  }
+  .physics-grid span {
+    font-size: 10px;
   }
   .physics-grid strong {
+    font-size: 13px;
+    margin-top: 4px;
+  }
+  .caution {
+    padding: 0 10px 10px;
+    font-size: 10px;
+  }
+  .backtest,
+  .empty-copy {
+    padding: 10px;
+    font-size: 12px;
+  }
+  .backtest strong {
+    font-size: 16px;
+  }
+  .panel {
+    border-radius: 16px;
+  }
+  .predict-strip {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px 12px;
+  }
+  .score-item {
+    min-width: 50px;
+  }
+  .score-item span {
+    font-size: 9px;
+  }
+  .score-item strong {
     font-size: 14px;
   }
 }
